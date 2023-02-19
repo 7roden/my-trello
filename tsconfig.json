@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": ".",
+    "paths": {
+      "ICard": ["src/common/interfaces/ICard"],
+      "IList": ["src/common/interfaces/IList"],
+      "IBoard ": ["src/common/interfaces/IBoard"],
+      "IBoardHome": ["src/common/interfaces/IBoardHome"],
+      "IStyle": ["src/common/interfaces/IStyle"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -20,7 +24,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

@@ -1,0 +1,66 @@
+.myBoards,
+.board {
+  position: relative;
+}
+
+.myBoards {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.board {
+  width: 200px;
+  height: 200px;
+  margin: 20px;
+  border: 2px solid lightgray;
+  background-color: lightgray;
+  color: #2b4074;
+  border-radius: 8px;
+}
+
+.addButton {
+  margin: 20px;
+  border: 2px solid #2b4074;
+  border-radius: 2px;
+  background-color: #2b4074;
+  color: white;
+}
+
+.addButton:hover {
+  background-color: red;
+}
+
+.spanDelete,
+.spanNoCreate {
+  color: red;
+}
+
+.boardMenu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.menu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+}
+.menu-item {
+  padding: 5px;
+  height: 28px;
+  border: 1px solid rgb(187, 187, 187);
+}
+.menu-item:hover {
+  color: red;
+}
+
+.menu-item,
+.addButton,
+.spanDelete,
+.spanNoCreate,
+.board,
+.boardMenu {
+  cursor: pointer;
+}
