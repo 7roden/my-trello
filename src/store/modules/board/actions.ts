@@ -9,13 +9,20 @@ import {
   BoardAction,
   BoardActionTypes,
   TIME_OUT_PAUSE,
-} from 'src/common/Types/myTypes';
+} from 'src/common/Types/BoardTypes';
 import { AxiosError } from 'axios';
+import { EditListsType } from 'src/common/Types/ListTypes';
+import { EditCardsType } from 'src/common/Types/CardTypes';
 
 type typeBoardDispatch = {
   type: string;
   payload?: IBoard;
 };
+
+async function getDataBoard(boardID: string) {
+  const data: IBoard = await api.get(`/board/${boardID}`);
+  return data;
+}
 
 export const getBoard =
   (id: string) => async (dispatch: Dispatch<BoardAction>) => {
@@ -136,16 +143,12 @@ export const createCard =
     }
   };
 
-  export const deleteList =
-  (boardID:string | undefined, listID: string | undefined) => async (dispatch: Dispatch<BoardAction>) => {
+export const deleteList =
+  (boardID: string | undefined, listID: string | undefined) =>
+  async (dispatch: Dispatch<BoardAction>) => {
     try {
-      dispatch({ type: BoardActionTypes.FETCH_BOARD });
       await api.delete(`/board/${boardID}/list/${listID}`);
-      const data: IBoard = await api.get(`/board/${boardID}`);
-      await setTimeout(
-        () => dispatch({ type: BoardActionTypes.DELETE_LIST, payload: data }),
-        TIME_OUT_PAUSE
-      );
+      dispatch({ type: BoardActionTypes.DELETE_LIST });
     } catch (e) {
       const error = e as AxiosError;
       //console.log('cath >', error.message);
@@ -156,16 +159,50 @@ export const createCard =
     }
   };
 
-  export const deleteCard =
-  (boardID:string | undefined, cardID: string | undefined) => async (dispatch: Dispatch<BoardAction>) => {
+export const editLists =
+  (boardID: string | undefined, lists: EditListsType) =>
+  async (dispatch: Dispatch<BoardAction>) => {
     try {
-      dispatch({ type: BoardActionTypes.FETCH_BOARD });
-      await api.delete(`/board/${boardID}/card/${cardID}`);
+      await api.put(`/board/${boardID}/list`, lists);
       const data: IBoard = await api.get(`/board/${boardID}`);
-      await dispatch({ type: BoardActionTypes.DELETE_CARD, payload: data });
+      await dispatch({ type: BoardActionTypes.EDIT_LISTS, payload: data });
     } catch (e) {
       const error = e as AxiosError;
       //console.log('cath >', error.message);
+      dispatch({
+        type: BoardActionTypes.ERROR_ACTION_TYPE,
+        payload: error.message,
+      });
+    }
+  };
+
+export const deleteCard =
+  (boardID: string | undefined, cardID: string | undefined) =>
+  async (dispatch: Dispatch<BoardAction>) => {
+    try {
+      await api.delete(`/board/${boardID}/card/${cardID}`);
+      dispatch({ type: BoardActionTypes.DELETE_CARD});
+    } catch (e) {
+      const error = e as AxiosError;
+      //console.log('cath >', error.message);
+      dispatch({
+        type: BoardActionTypes.ERROR_ACTION_TYPE,
+        payload: error.message,
+      });
+    }
+  };
+
+export const editCards =
+  (boardID: string | undefined, cards: EditCardsType) =>
+  async (dispatch: Dispatch<BoardAction>) => {
+    try {
+      //console.log('cards >> ',cards);
+      await api.put(`/board/${boardID}/card`, cards);
+      const data: IBoard = await api.get(`/board/${boardID}`);
+      //console.log('data >> ',data);
+      await dispatch({ type: BoardActionTypes.EDIT_CARDS, payload: data });
+    } catch (e) {
+      const error = e as AxiosError;
       dispatch({
         type: BoardActionTypes.ERROR_ACTION_TYPE,
         payload: error.message,

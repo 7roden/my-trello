@@ -1,5 +1,9 @@
 import { IBoardHome } from 'IBoardHome';
 import { IBoard } from 'IBoard ';
+import Card from 'src/pages/Board/components/Card/Card';
+import { ICard } from 'ICard';
+import { type } from 'os';
+import { IList } from 'IList';
 
 export type StateType = {
   board: { board: IBoard };
@@ -16,18 +20,6 @@ export enum BoardHomeActionTypes {
   CLEAR_ERROR = 'CLEAR_ERROR',
 }
 
-export enum BoardActionTypes {
-  FETCH_BOARD = 'FETCH_BOARD',
-  UPDATE_BOARD = 'UPDATE_BOARD',
-  CHANGE_BOARD = 'CHANGE_BOARD',
-  CREATE_LIST = 'CREATE_LIST',
-  CHANGE_LIST_TITLE = 'CHANGE_LIST_TITLE',
-  DELETE_CARD = 'DELETE_CARD',
-  CREATE_CARD = 'CREATE_CARD',
-  DELETE_LIST = 'DELETE_LIST',
-  ERROR_ACTION_TYPE = 'ERROR_ACTION_TYPE',
-  CLEAR_ERROR = 'CLEAR_ERROR',
-}
 export const TIME_OUT_PAUSE = 2000;
 
 interface FetchBoards {
@@ -47,11 +39,11 @@ interface FetchErrorBoards {
   payload: string;
 }
 
-interface FethBoardHomeClearError {
+interface FetchBoardHomeClearError {
   type: BoardHomeActionTypes.CLEAR_ERROR;
 }
 
-interface FethDeleteBoardHome {
+interface FetchDeleteBoardHome {
   type: BoardHomeActionTypes.DELETE_BOARD;
   payload: IBoardHome[];
 }
@@ -61,8 +53,23 @@ export type BoardsHomeAction =
   | FetchUpdateBoards
   | FetchErrorBoards
   | FetchCreateBoard
-  | FethBoardHomeClearError
-  | FethDeleteBoardHome;
+  | FetchBoardHomeClearError
+  | FetchDeleteBoardHome;
+
+export enum BoardActionTypes {
+  FETCH_BOARD = 'FETCH_BOARD',
+  UPDATE_BOARD = 'UPDATE_BOARD',
+  CHANGE_BOARD = 'CHANGE_BOARD',
+  CREATE_LIST = 'CREATE_LIST',
+  CHANGE_LIST_TITLE = 'CHANGE_LIST_TITLE',
+  DELETE_CARD = 'DELETE_CARD',
+  CREATE_CARD = 'CREATE_CARD',
+  DELETE_LIST = 'DELETE_LIST',
+  ERROR_ACTION_TYPE = 'ERROR_ACTION_TYPE',
+  CLEAR_ERROR = 'CLEAR_ERROR',
+  EDIT_LISTS = 'EDIT_LISTS',
+  EDIT_CARDS = 'EDIT_CARDS'
+}
 
 interface FetchBoard {
   type: BoardActionTypes.FETCH_BOARD;
@@ -97,17 +104,25 @@ interface FetchErrorAction {
   payload: string;
 }
 
-interface FethDeleteList {
+interface FetchDeleteList {
   type: BoardActionTypes.DELETE_LIST;
+}
+
+interface FetchEditLists {
+  type: BoardActionTypes.EDIT_LISTS;
   payload: IBoard;
 }
 
-interface FethDeleteCard {
+interface FetchDeleteCard {
   type: BoardActionTypes.DELETE_CARD;
+}
+
+interface FetchEditCards {
+  type: BoardActionTypes.EDIT_CARDS;
   payload: IBoard;
 }
 
-interface FethBoardClearError {
+interface FetchBoardClearError {
   type: BoardActionTypes.CLEAR_ERROR;
 }
 
@@ -119,6 +134,8 @@ export type BoardAction =
   | FetchChangeList
   | FetchCreateCard
   | FetchErrorAction
-  | FethDeleteList
-  | FethDeleteCard
-  | FethBoardClearError;
+  | FetchDeleteList
+  | FetchDeleteCard
+  | FetchEditLists
+  | FetchEditCards
+  | FetchBoardClearError;

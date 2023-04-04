@@ -1,5 +1,5 @@
 import { IBoard } from 'IBoard ';
-import { BoardAction, BoardActionTypes } from 'src/common/Types/myTypes';
+import { BoardAction, BoardActionTypes } from 'src/common/Types/BoardTypes';
 
 interface boardState {
   board: IBoard;
@@ -22,7 +22,7 @@ export default function reducer(
   action: BoardAction
 ): boardState {
   //console.log('board reduser action >>',action);
-  console.log('board reduser state >>', state);
+  //console.log('board reduser state >>', state);
   switch (action.type) {
     case BoardActionTypes.FETCH_BOARD:
       return {
@@ -80,16 +80,24 @@ export default function reducer(
     case BoardActionTypes.DELETE_LIST:
       return {
         ...state,
-        board: action.payload,
         loading: false,
         error: '',
+      };
+    case BoardActionTypes.EDIT_LISTS:
+      return {
+        ...state,
+        board: action.payload,
       };
     case BoardActionTypes.DELETE_CARD:
       return {
         ...state,
-        board: action.payload,
         loading: false,
         error: '',
+      };
+    case BoardActionTypes.EDIT_CARDS:
+      return {
+        ...state,
+        board: action.payload,
       };
     default: {
       return state;

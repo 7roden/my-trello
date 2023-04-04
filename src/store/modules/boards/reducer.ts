@@ -2,7 +2,7 @@ import { IBoardHome } from 'IBoardHome'; // не забудьте описать
 import {
   BoardHomeActionTypes,
   BoardsHomeAction,
-} from 'src/common/Types/myTypes';
+} from 'src/common/Types/BoardTypes';
 
 interface boardsState {
   boards: IBoardHome[];
@@ -20,8 +20,6 @@ export default function reducer(
   state = initialState,
   action: BoardsHomeAction
 ): boardsState {
-  //console.log('boards reduser action >>', action);
-  //console.log('boards reduser state >>', state);
   switch (action.type) {
     case BoardHomeActionTypes.FETCH_BOARDS: {
       return { loading: true, boards: [], error: '' };
@@ -34,7 +32,6 @@ export default function reducer(
         boards: action.payload,
       };
     case BoardHomeActionTypes.CREATE_BOARD:
-      //console.log('reduser click');
       return {
         ...state,
         error: '',

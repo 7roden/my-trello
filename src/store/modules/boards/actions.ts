@@ -6,18 +6,13 @@ import {
   BoardHomeActionTypes,
   BoardsHomeAction,
   TIME_OUT_PAUSE,
-} from 'src/common/Types/myTypes';
-
-type typeBoardsHomeDispatch = {
-  type: string;
-  payload?: IBoardHome[];
-};
+} from 'src/common/Types/BoardTypes';
 
 export const getBoards = () => async (dispatch: Dispatch<BoardsHomeAction>) => {
   try {
     dispatch({ type: BoardHomeActionTypes.FETCH_BOARDS });
     const data: { boards: IBoardHome[] } = await api.get('/board');
-    console.log('boards data >', data);
+    //console.log('boards data >', data);
     await setTimeout(
       () =>
         dispatch({

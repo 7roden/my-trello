@@ -65,7 +65,7 @@ const ModalChange: FC<typePropsModalChange> = ({ listID, titleList }) => {
   // };
 
   return (
-    <div>
+    <>
       {isVisibleModal ? (
         <div className="formListChange">
           <form
@@ -85,7 +85,7 @@ const ModalChange: FC<typePropsModalChange> = ({ listID, titleList }) => {
           {titleList}
         </h3>
       )}
-    </div>
+    </>
   );
 };
 

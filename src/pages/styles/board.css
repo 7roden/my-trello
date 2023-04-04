@@ -1,36 +1,54 @@
-.lists {
-  display: flex;
-  flex-wrap: wrap;
+.buttonAddCard,
+.buttonAddList,
+.listMenu,
+.cardMenu,
+.menu-item,
+.closeModal,
+.spanDelete,
+.spanNoCreate {
+  cursor: pointer;
+  border-radius: 2px;
 }
 
-.myList {
+.lists {
+  white-space: nowrap;
+  overflow: auto;
+}
+
+.myList,
+.modalCreateList {
   position: relative;
+  display: inline-grid;
   width: 250px;
   min-height: 50px;
   background-color: lightgray;
   opacity: 1;
   text-align: left;
   color: #2b4074;
-  margin: 20px;
+  margin: 10px;
   padding: 5px;
   border-radius: 3px;
+  white-space: normal;
 }
 
-.modalList,
+.modalCreateList,
 .modalCreateCard {
   margin: 20px 5px;
 }
 
 .buttonAddCard,
 .buttonAddList {
-  background-color: #2b4074;
-  color: white;
-  border: 2px solid #2b4074;
+  background-color: lightgray;
+  color: #2b4074;
+  border: 2px solid lightgray;
   border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.buttonAddCard:hover,
-.buttonAddList:hover {
+.modalCreateList:hover,
+.modalCreateCard:hover {
   background-color: red;
   border: 2px solid red;
 }
@@ -39,6 +57,7 @@ form > * {
   padding: 0 3px;
   margin: 0 5px 0 0;
   outline: none;
+  resize: none;
 }
 
 ul {
@@ -47,18 +66,54 @@ ul {
   padding: 0;
 }
 
+.cards {
+  position: relative;
+  width: 88%;
+  margin: 5px 5%;
+}
+
+.cards > * {
+  margin: 5px 0;
+}
+
+.container {
+  position: relative;
+  margin: 10px 0;
+}
+
 .card {
   position: relative;
+  width: 100%;
   min-height: 30px;
-  margin: 10px 5px;
-  padding: 0 5px;
   background-color: white;
+  border-radius: 4px;
+}
+
+.card span {
+  margin: 0 5px;
+}
+
+.dropZone {
+  width: 100%;
+  background-color: red;
+  min-height: 30px;
+  box-shadow: 0 4px 3px darkgrey;
+  z-index: 5;
+  border-radius: 4px;
+}
+
+/* .container:hover .dropZone {
+  display: block;
+} */
+
+.hidden {
+  display: none;
 }
 
 .spanDelete,
-.spanNoCreate {
+.spanNoCreate,
+.closeModal {
   color: red;
-  cursor: pointer;
 }
 
 .listMenu {
@@ -101,11 +156,27 @@ ul {
   margin: 5px;
 }
 
-.buttonAddCard,
-.buttonAddList,
-.listMenu,
-.cardMenu,
-.menu-item {
-  cursor: pointer;
-  border-radius: 2px;
+.modalEditCard {
+  width: 80%;
+  height: 80%;
+  background-color: gray;
+  opacity: 1;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  z-index: 100;
+}
+
+.closeModal {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: -10px;
+  right: -10px;
+  background-color: gray;
+  border-radius: 50%;
+}
+
+.dragging {
+  opacity: 0.1;
 }

@@ -1,64 +1,106 @@
-import { ICard } from 'ICard';
-import Card from '../Card/Card';
 import { useParams } from 'react-router-dom';
-import { FC } from 'react';
+import React, { FC, useState } from 'react';
 import ModalChange from './ModalList/ModalChange';
+
+import { useAppDispatch, useAppSelector } from 'src/hook';
+import { IList } from 'IList';
+import ListMenu from './ListMenu';
+//import ListCards from '../Card/ListCards';
+import { RootState } from 'src/store/store';
+import { ICard } from 'ICard';
+import CardDropZone from '../Card/CardDropZone';
+import Card from '../Card/Card';
 import ModalCreateCard from './ModalList/ModalCreateCard';
-import { BsThreeDots } from 'react-icons/bs';
-import Popup from 'reactjs-popup';
-import { useAppDispatch } from 'src/hook';
 
 type typePropsList = {
-  id?: string;
-  title: string;
-  cards: ICard[];
+  list: IList;
 };
 
-const List: FC<typePropsList> = ({ id, title, cards }) => {
-  const { deleteList } = useAppDispatch();
-  const listCards: JSX.Element[] = cards.map((card: ICard) => {
-    return <Card key={card.id} title={card.title} cardID = {card.id}/>;
-  });
+const List: FC<typePropsList> = ({ list }) => {
+  const { title, cards, id } = list;
+  const { deleteList, editLists, getBoard } = useAppDispatch();
   const boardID = useParams<string>().id;
-  const clickDeleteList = () => {
-    console.log('delete list boardID=',boardID, ' list id=',id)
-    deleteList(boardID, id);
-  }
+  //const lists = useAppSelector<IList[]>((state) => state.board.board.lists);
 
-  const Menu = ():JSX.Element => (
-    <div className="listMenu">
-      <Popup
-        trigger={
-          <div>
-            {' '}
-            <BsThreeDots size={'15px'} color="red" />
-          </div>
-        }
-        position="right top"
-        on="click"
-        closeOnDocumentClick
-        mouseLeaveDelay={300}
-        mouseEnterDelay={0}
-        contentStyle={{ padding: '0px', border: 'none' }}
-        arrow={false}
-      >
-        <div className="menu">
-          <div className="menu-item" onClick={clickDeleteList}>
-            Delete list
-          </div>
-        </div>
-      </Popup>
-    </div>
+  const [isVisibleDropZone, setIsVisibleDropZone] = useState<boolean[]>(
+    cards.map(() => false).concat(false)
   );
+
+  //console.log('visible map >>', isVisibleDropZone);
+
+  const handleSetVisible = (
+    e: React.DragEvent<HTMLElement>,
+    position: number
+  ) => {
+    if (e.currentTarget.className === 'card') {
+      setIsVisibleDropZone(
+        isVisibleDropZone.map((isDrop: boolean, index: number) => {
+          if (index === position) return true;
+          return false;
+        })
+      );
+      //e.preventDefault();
+    }
+  };
+
+  const onDragEndHandler = () => {
+    setIsVisibleDropZone(cards.map(() => false).concat(false));
+  };
+
+  const onDragEnterHandler = (e: React.DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    //e.stopPropagation();
+    if (!cards.length) {
+      setIsVisibleDropZone(isVisibleDropZone.map(() => true));
+    }
+  };
+
+  const onDragLeaveHandler = () => {
+    setIsVisibleDropZone(isVisibleDropZone.map(() => false));
+  };
+
+  const ListCards: FC = (): JSX.Element => {
+    return (
+      <div
+        className="cards"
+        onDragEnter={onDragEnterHandler}
+        onDragLeave={onDragLeaveHandler}
+      >
+        {cards.map((card: ICard, index: number) => {
+          return (
+            <div key={card.id}>
+              {isVisibleDropZone[index] && (
+                <CardDropZone
+                  currentList={list}
+                  currentCard={card}
+                  positionDrop={index}
+                  onDragEnd={onDragEndHandler}
+                />
+              )}
+              <Card
+                card={card}
+                list={list}
+                positionCard={index}
+                onDragOver={handleSetVisible}
+                onDragEnd={onDragEndHandler}
+              />
+            </div>
+          );
+        })}
+        {isVisibleDropZone[cards.length] && (
+          <CardDropZone currentList={list} onDragEnd={onDragEndHandler} />
+        )}
+
+        <ModalCreateCard listID={list.id} position={list.cards.length + 1} />
+      </div>
+    );
+  };
 
   return (
     <div className="myList">
       <ModalChange listID={id} titleList={title} />
-      <Menu />
-      <div>
-        <ul className="cardList">{listCards}</ul>
-        <ModalCreateCard listID={id} position={listCards.length + 1} />
-      </div>
+      <ListMenu boardID={boardID} listID={list.id} />
+      <ListCards />
     </div>
   );
 };

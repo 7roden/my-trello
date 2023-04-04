@@ -37,6 +37,11 @@ const ModalChangeBoard: FC<{ board: IBoard }> = ({ board }) => {
     setIsVisibleModal(true);
   };
 
+  const handleSelected = (e: any) => {
+    e.target.select();
+
+  }
+
   // const FormToChange: FC<{title:string}> = ({title}): JSX.Element => {
   //   return (
   //     <div className="formToChange">
@@ -55,18 +60,19 @@ const ModalChangeBoard: FC<{ board: IBoard }> = ({ board }) => {
     <div>
       {!isVisibleModal ? (
         <h1 className="boardTitle" onClick={handleTitle}>
-          {title} {boardID}
+          {title} boardID:{boardID}
         </h1>
       ) : (
         <div className="formToChange">
-        <form onSubmit={changeTitle} onBlur={changeTitle}>
-          <input
-            type="text"
-            value={title || ''}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </form>
-      </div>
+          <form onSubmit={changeTitle} onBlur={changeTitle}>
+            <input
+              type="text"
+              value={title || ''}
+              onFocus={handleSelected}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </form>
+        </div>
       )}
     </div>
   );

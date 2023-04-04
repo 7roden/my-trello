@@ -14,8 +14,6 @@ const Home: FC = () => {
 
   const [myBoards, setMyBoars] = useState<JSX.Element[]>([]);
   const { boards, loading, error } = useAppSelector((state) => state.boards);
-  const rrr = useAppSelector((state) => state);
-  console.log('state home >>', rrr);
   useEffect(() => {
     if (boards.length) {
       setMyBoars(
@@ -26,10 +24,6 @@ const Home: FC = () => {
     }
   }, [boards]);
 
-  if (loading) {
-    return <ProgressBar />;
-  }
-
   if (error) {
     Swal.fire('ERROR', error, 'error');
     clearError();
@@ -38,10 +32,14 @@ const Home: FC = () => {
   return (
     <div className="home">
       <h1 className="homeTitle">My Boards</h1>
-      <div className="myBoards">
-        {myBoards}
-        <Modal />
-      </div>
+      {loading ? (
+        <ProgressBar />
+      ) : (
+        <div className="myBoards">
+          {myBoards}
+          <Modal />
+        </div>
+      )}
     </div>
   );
 };

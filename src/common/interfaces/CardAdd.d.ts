@@ -1,6 +1,6 @@
 export interface CardAdd {
   title: string,
-  list_id: ID,
+  list_id?: ID,
   position: number,
   description: string,
   custom: {}

@@ -1,23 +1,25 @@
+import { IList } from 'IList';
 import { useState, FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { CardAdd } from 'src/common/interfaces/CardAdd';
 import { isValidTitle } from 'src/common/Modules/Modules';
-import { useAppDispatch } from 'src/hook';
+import { useAppDispatch, useAppSelector } from 'src/hook';
 
 type typePropsCreateCard = {
-  listID?: string;
-  position: number;
+  listID: string;
+  position:number;
 };
 
 const ModalCreateCard: FC<typePropsCreateCard> = ({ listID, position }) => {
   const [title, setTitle] = useState<string>('Enter card name...');
-  const boardID = useParams<string>().id;
+  const boardID = useParams<string>().id; 
   const { createCard } = useAppDispatch();
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
+  let isOnBlur = true;
 
   const handleCard = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isValidTitle(title)) {
+    if (isValidTitle(title) && isOnBlur) {
       const newCard: CardAdd = {
         title,
         list_id: listID,
@@ -34,11 +36,17 @@ const ModalCreateCard: FC<typePropsCreateCard> = ({ listID, position }) => {
   const noCreateCard = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
     setIsVisibleModal(false);
+    isOnBlur = false;
   };
 
   const buttonAddCard = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsVisibleModal(true);
   };
+
+  const onFocusForm = () => {
+    setTitle('');
+    isOnBlur = true;
+  }
 
   // const FormCreateCard: FC = (): JSX.Element => (
   //   <div className="formCreateCard">
@@ -57,7 +65,7 @@ const ModalCreateCard: FC<typePropsCreateCard> = ({ listID, position }) => {
       {isVisibleModal ? (
         <div className="formCreateCard">
           <form onSubmit={handleCard} onBlur={handleCard} >
-            <textarea  value={title} onChange={(e) => setTitle(e.target.value)} onFocus={() => setTitle('')}/>
+            <textarea  value={title} onChange={(e) => setTitle(e.target.value)} onFocus={onFocusForm}/>
             <button type="submit">Create card</button>
             <span className="spanNoCreate" onClick={noCreateCard}>
               &times;
@@ -65,9 +73,9 @@ const ModalCreateCard: FC<typePropsCreateCard> = ({ listID, position }) => {
           </form>
         </div>
       ) : (
-        <button className="buttonAddCard" onClick={buttonAddCard}>
-          Add card
-        </button>
+        <span className="buttonAddCard" onClick={buttonAddCard}>
+          + Add card
+        </span>
       )}
     </div>
   );

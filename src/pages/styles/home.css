@@ -60,7 +60,6 @@
 .addButton,
 .spanDelete,
 .spanNoCreate,
-.board,
 .boardMenu {
   cursor: pointer;
 }

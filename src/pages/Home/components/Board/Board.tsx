@@ -6,26 +6,38 @@ import Popup from 'reactjs-popup';
 import { useAppDispatch } from 'src/hook';
 
 const Board: FC<IBoardHome> = ({ id, title }) => {
-const { deleteBoard, getBoards } = useAppDispatch();
-const deleteBoardHome = () => {
-  console.log('delete board id=',id)
-  deleteBoard(id);
-}
+  const { deleteBoard } = useAppDispatch();
+  const deleteBoardHome = () => {
+    console.log('delete board id=', id);
+    deleteBoard(id);
+  };
 
-  const Menu = () => (
+  const clickMenu = (e: React.MouseEvent) => {
+    console.log('sdfsdfdf');
+    e.stopPropagation();
+  };
+
+  const Menu = (): JSX.Element => (
     <div className="boardMenu">
       <Popup
-        trigger={<div> <BsThreeDots  size={'15px'} color="red" /></div>}
+        trigger={
+          <div>
+            <BsThreeDots onClick={clickMenu} size={'15px'} color="red" />
+          </div>
+        }
         position="right top"
-        on="click"
+        on="hover"
         closeOnDocumentClick
+        closeOnEscape
         mouseLeaveDelay={300}
         mouseEnterDelay={0}
         contentStyle={{ padding: '0px', border: 'none' }}
         arrow={false}
       >
         <div className="menu">
-          <div className="menu-item" onClick={deleteBoardHome}> Delete board</div>
+          <div className="menu-item" onClick={deleteBoardHome}>
+            Delete board
+          </div>
         </div>
       </Popup>
     </div>

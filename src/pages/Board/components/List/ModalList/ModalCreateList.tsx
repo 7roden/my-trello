@@ -49,7 +49,7 @@ const ModalCreateList = (props: any) => {
   // );
 
   return (
-    <div className="modalList">
+    <div className="modalCreateList">
       {isVisibleModal ? (
         <div className="formCreateList">
           <form onSubmit={handleList} onBlur={handleList}>
@@ -65,9 +65,9 @@ const ModalCreateList = (props: any) => {
           </form>
         </div>
       ) : (
-        <button className="buttonAddList" onClick={clickAddList}>
-          Add list
-        </button>
+        <span className="buttonAddList" onClick={clickAddList}>
+          + Add list
+        </span>
       )}
     </div>
   );

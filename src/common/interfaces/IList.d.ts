@@ -1,6 +1,6 @@
 export interface IList {
-  id?: number, 
-  title: string, 
-  cards: ICard,
-  poition?:number
+  id: string;
+  title: string;
+  cards: ICard;
+  position: number;
 }

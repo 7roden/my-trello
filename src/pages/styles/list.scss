@@ -1,0 +1,17 @@
+.lists {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.myList {
+  position: relative;
+  width: 250px;
+  min-height: 50px;
+  background-color: lightgray;
+  opacity: 1;
+  text-align: left;
+  color: #2b4074;
+  margin: 20px;
+  padding: 5px;
+  border-radius: 3px;
+}
