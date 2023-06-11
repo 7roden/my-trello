@@ -16,6 +16,7 @@ const initialState: SlotCartState = {
   dragedCard: {
     id: '',
     title: '',
+    position: 0
   },
   dragedList: { id: '', position: 0, title: '', cards: [] },
   dragElementLimits: {

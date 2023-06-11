@@ -43,12 +43,10 @@ const Board: FC<IBoardHome> = ({ id, title }) => {
     </div>
   );
   return (
-    <Link to={`/board/${id}`}>
       <div className="board">
         <h5>{title}</h5>
         <Menu />
       </div>
-    </Link>
   );
 };
 

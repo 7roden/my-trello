@@ -16,21 +16,17 @@ import CardEdit from './components/CardEdit/CardEdit';
 const Board: FC = () => {
   const { id } = useParams<string>();
   const { getBoard, clearError } = useAppDispatch();
-  let { board, loading, error } = useAppSelector((state) => state.board);
-  let { card, isVisibleEditCard } = useAppSelector((state) => state.card);
-  let [lists, setLists] = useState<JSX.Element[]>([]);
+  const { board, loading, error } = useAppSelector((state) => state.board);
+  const { card, isVisibleEditCard } = useAppSelector((state) => state.card);
+  let [lists, setLists] = useState<IList[]>([]);
 
   useEffect(() => {
-    getBoard(id || '');
-  }, []);
+    if (id) getBoard(id);
+  }, [id]);
 
   useEffect(() => {
     if (board?.title) {
-      setLists(
-        board.lists.map((list: IList) => {
-          return <List key={list.id} list={list} />;
-        })
-      );
+      setLists(board.lists);
     }
   }, [board]);
 
@@ -45,10 +41,15 @@ const Board: FC = () => {
 
   return (
     <div className="myBoard">
-      <Link to={'/'}>Home</Link>
+      <Link to={'/'} draggable={false}>
+        Home
+      </Link>
       <ModalChangeBoard board={board} />
       <div className="lists">
-        {lists}
+        {lists &&
+          lists.map((list: IList) => {
+            return <List key={list.id} list={list} />;
+          })}
         <ModalCreateList boardID={id} position={lists.length + 1} />
       </div>
       {isVisibleEditCard && <CardEdit card={card} />}

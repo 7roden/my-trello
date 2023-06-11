@@ -8,7 +8,7 @@ interface CardState {
 }
 
 const initialState: CardState = {
-  card: { title: '', id: '' },
+  card: { title: '', id: '', position: 0 },
   isVisibleEditCard: false,
 };
 
@@ -27,7 +27,7 @@ export default function reducer(
       return {
         ...state,
         isVisibleEditCard: false,
-        card: { title: '', id: '' },
+        card: { title: '', id: '', position: 0 },
       };
     default: {
       return state;

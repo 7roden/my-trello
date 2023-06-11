@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { elementLimitsType } from 'src/common/Types/CardTypes';
 import { useAppDispatch } from 'src/hook';
 import CardListMenu from './CardListMenu';
+import CardDropZone from './CardDropZone';
 
 type propsCard = {
   card: ICard;
@@ -13,10 +14,12 @@ type propsCard = {
   positionCard: number;
   onDragOver: (e: React.DragEvent<HTMLElement>, position: number) => void;
   onDragEnd: () => void;
+  isVisibleDropZone: boolean;
 };
 
 const Card: FC<propsCard> = (props) => {
-  const { card, list, positionCard, onDragOver, onDragEnd } = props;
+  const { card, list, positionCard, isVisibleDropZone, onDragOver, onDragEnd } =
+    props;
   const { id, title } = card;
   const [isVisibleCardMenu, setIsVisibleCardMenu] = useState(false);
   const { showModalCard, cardDragStart } = useAppDispatch();
@@ -59,6 +62,7 @@ const Card: FC<propsCard> = (props) => {
 
   const dragOverHandler = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
+    //console.log('dragOver card >>', e.currentTarget);
     const position = positionDropZone(e, e.currentTarget);
     onDragOver(e, position);
   };
@@ -74,10 +78,11 @@ const Card: FC<propsCard> = (props) => {
   };
 
   const dragStartHandler = (e: React.DragEvent<HTMLElement>, card: ICard) => {
+    e.currentTarget.classList.add('dragging');
     const elLimits: elementLimitsType = e.currentTarget.getBoundingClientRect();
     e.dataTransfer.setData('text/plain', e.currentTarget.id);
+    console.log('dragStart >>')
     const img = e.currentTarget as Element;
-    e.currentTarget.classList.add('dragging');
     e.dataTransfer.setDragImage(img, elLimits.width / 2, elLimits.height / 2);
     const dragElementLimits: elementLimitsType = {
       top: e.clientY - elLimits.top,
@@ -88,11 +93,32 @@ const Card: FC<propsCard> = (props) => {
       height: elLimits.height,
     };
     cardDragStart(card, list, dragElementLimits);
-    return false;
+
+    /*     const ball = e.currentTarget;
+    //e.currentTarget.remove()
+    ball.style.position = 'absolute';
+    ball.style.width = dragElementLimits.width+'';
+    ball.style.height = dragElementLimits.height+'';
+    moveAt(e);
+    ball.style.zIndex = '1000';
+    ball.ondragstart = function(){return false}
+    function moveAt(e: React.DragEvent<HTMLElement>) {
+      ball.style.left = e.pageX - ball.offsetWidth / 2 + 'px';
+      ball.style.top = e.pageY - ball.offsetHeight / 2 + 'px';
+    }
+    //document.body.appendChild(ball); */
   };
 
   return (
     <>
+      {isVisibleDropZone && (
+        <CardDropZone
+          currentList={list}
+          currentCard={card}
+          positionDrop={positionCard}
+          onDragEnd={dragEndHandler}
+        />
+      )}
       <div
         className="card"
         id={`card${id}`}

@@ -5,6 +5,7 @@ import '../styles/home.css';
 import { useAppDispatch, useAppSelector } from 'src/hook';
 import ProgressBar from './components/Board/ProgressBar';
 import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
 
 const Home: FC = () => {
   const { getBoards, clearError } = useAppDispatch();
@@ -18,7 +19,9 @@ const Home: FC = () => {
     if (boards.length) {
       setMyBoars(
         boards.map((board) => (
-          <Board key={board.id} id={board.id} title={board.title} />
+          <Link key={board.id} to={`/board/${board.id}`}>
+            <Board id={board.id} title={board.title} />
+          </Link>
         ))
       );
     }
