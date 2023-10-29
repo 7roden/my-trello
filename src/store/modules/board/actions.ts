@@ -19,23 +19,19 @@ type typeBoardDispatch = {
   payload?: IBoard;
 };
 
-async function getDataBoard(boardID: string) {
-  const data: IBoard = await api.get(`/board/${boardID}`);
-  return data;
-}
 
 export const getBoard =
   (id: string) => async (dispatch: Dispatch<BoardAction>) => {
     try {
       dispatch({ type: BoardActionTypes.FETCH_BOARD });
       const data: IBoard = await api.get(`/board/${id}`);
+      data.id = id;
       await setTimeout(
         () => dispatch({ type: BoardActionTypes.UPDATE_BOARD, payload: data }),
         TIME_OUT_PAUSE
       );
     } catch (e) {
       const error = e as AxiosError;
-      //console.log('cath >', error.message);
       dispatch({
         type: BoardActionTypes.ERROR_ACTION_TYPE,
         payload: error.message,
@@ -52,6 +48,7 @@ export const changeBoard =
         title,
       });
       const data: IBoard = await api.get(`/board/${id}`);
+      data.id = id || '';
       await dispatch({ type: BoardActionTypes.CHANGE_BOARD, payload: data });
     } catch (e) {
       const error = e as AxiosError;
@@ -73,6 +70,7 @@ export const createList =
         position,
       });
       const data: IBoard = await api.get(`/board/${boardID}`);
+      data.id = boardID || '';
       await setTimeout(
         () => dispatch({ type: BoardActionTypes.CREATE_LIST, payload: data }),
         TIME_OUT_PAUSE
@@ -96,6 +94,7 @@ export const changeListTitle =
         title,
       });
       const data: IBoard = await api.get(`/board/${boardID}`);
+      data.id = boardID || '';
       await setTimeout(
         () =>
           dispatch({
@@ -127,15 +126,14 @@ export const createCard =
         description,
         custom,
       });
-      const data: IBoard = await api.get(`/board/${boardID}`);
-      console.log(data);
+      // const data: IBoard = await api.get(`/board/${boardID}`);
+      // data.id = boardID || '';
       await setTimeout(
-        () => dispatch({ type: BoardActionTypes.CREATE_CARD, payload: data }),
+        () => dispatch({ type: BoardActionTypes.CREATE_CARD }),
         TIME_OUT_PAUSE
       );
     } catch (e) {
       const error = e as AxiosError;
-      //console.log('cath >', error.message);
       dispatch({
         type: BoardActionTypes.ERROR_ACTION_TYPE,
         payload: error.message,
@@ -165,6 +163,7 @@ export const editLists =
     try {
       await api.put(`/board/${boardID}/list`, lists);
       const data: IBoard = await api.get(`/board/${boardID}`);
+      data.id = boardID || '';
       await dispatch({ type: BoardActionTypes.EDIT_LISTS, payload: data });
     } catch (e) {
       const error = e as AxiosError;
@@ -181,10 +180,9 @@ export const deleteCard =
   async (dispatch: Dispatch<BoardAction>) => {
     try {
       await api.delete(`/board/${boardID}/card/${cardID}`);
-      dispatch({ type: BoardActionTypes.DELETE_CARD});
+      dispatch({ type: BoardActionTypes.DELETE_CARD });
     } catch (e) {
       const error = e as AxiosError;
-      //console.log('cath >', error.message);
       dispatch({
         type: BoardActionTypes.ERROR_ACTION_TYPE,
         payload: error.message,
@@ -198,9 +196,9 @@ export const editCards =
     try {
       //console.log('cards >> ',cards);
       await api.put(`/board/${boardID}/card`, cards);
-      const data: IBoard = await api.get(`/board/${boardID}`);
-      //console.log('data >> ',data);
-      await dispatch({ type: BoardActionTypes.EDIT_CARDS, payload: data });
+      // const data: IBoard = await api.get(`/board/${boardID}`);
+      // data.id = boardID || '';
+      await dispatch({ type: BoardActionTypes.EDIT_CARDS});
     } catch (e) {
       const error = e as AxiosError;
       dispatch({

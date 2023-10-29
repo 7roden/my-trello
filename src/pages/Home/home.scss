@@ -1,3 +1,7 @@
+$boardColor: lightgray;
+$addButtonColor: #2b4074;
+$hoverColor: red;
+
 .myBoards,
 .board {
   position: relative;
@@ -12,27 +16,30 @@
   width: 200px;
   height: 200px;
   margin: 20px;
-  border: 2px solid lightgray;
-  background-color: lightgray;
-  color: #2b4074;
+  border: 2px solid $boardColor;
+  background-color: $boardColor;
+  color: $addButtonColor;
   border-radius: 8px;
 }
 
 .addButton {
   margin: 20px;
-  border: 2px solid #2b4074;
+  border: 2px solid $addButtonColor;
   border-radius: 2px;
-  background-color: #2b4074;
+  background-color: $addButtonColor;
   color: white;
+
+  &:hover {
+    background-color: $hoverColor;
+    border: 2px solid $hoverColor;
+  }
 }
 
-.addButton:hover {
-  background-color: red;
-}
+
 
 .spanDelete,
 .spanNoCreate {
-  color: red;
+  color: $hoverColor;
 }
 
 .boardMenu {
@@ -47,14 +54,17 @@
   flex-direction: column;
   background: #ffffff;
 }
+
 .menu-item {
   padding: 5px;
   height: 28px;
   border: 1px solid rgb(187, 187, 187);
+
+  &:hover {
+    color: $hoverColor;
+  }
 }
-.menu-item:hover {
-  color: red;
-}
+
 
 .menu-item,
 .addButton,

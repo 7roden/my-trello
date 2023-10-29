@@ -1,7 +1,7 @@
 import React, { useEffect, FC, useState } from 'react';
 import Board from './components/Board/Board';
 import Modal from './components/Modal/Modal';
-import '../styles/home.css';
+import './home.scss';
 import { useAppDispatch, useAppSelector } from 'src/hook';
 import ProgressBar from './components/Board/ProgressBar';
 import Swal from 'sweetalert2';
@@ -19,7 +19,7 @@ const Home: FC = () => {
     if (boards.length) {
       setMyBoars(
         boards.map((board) => (
-          <Link key={board.id} to={`/board/${board.id}`}>
+          <Link key={board.id} to={`/board/${board.id}`} draggable='false'>
             <Board id={board.id} title={board.title} />
           </Link>
         ))

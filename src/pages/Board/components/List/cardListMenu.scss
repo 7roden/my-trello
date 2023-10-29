@@ -1,0 +1,29 @@
+.cardMenu {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  margin: 0 0 5px 5px;
+
+  &:hover {
+    background-color: gray;
+  }
+}
+
+.menu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: gray;
+}
+.menu-item {
+  padding: 5px;
+  height: 28px;
+  border-bottom: 1px solid rgb(187, 187, 187);
+
+  &:hover {
+    color: red;
+  }
+}

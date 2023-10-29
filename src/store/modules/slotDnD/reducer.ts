@@ -7,26 +7,15 @@ import {
 } from 'src/common/Types/CardTypes';
 
 interface SlotCartState {
-  dragedCard: ICard;
-  dragedList: IList;
-  dragElementLimits: elementLimitsType;
+  dragedCard: ICard | null;
+  dragedList: IList | null;
+  dragElementLimits: elementLimitsType | null;
 }
 
 const initialState: SlotCartState = {
-  dragedCard: {
-    id: '',
-    title: '',
-    position: 0
-  },
-  dragedList: { id: '', position: 0, title: '', cards: [] },
-  dragElementLimits: {
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    width: 0,
-    height: 0,
-  },
+  dragedCard: null,
+  dragedList: null,
+  dragElementLimits: null,
 };
 
 export default function reducer(
@@ -41,6 +30,13 @@ export default function reducer(
         dragedList: action.payload.list,
         dragElementLimits: action.payload.dragElementLimits,
       };
+      case CardActionTypes.CARD_DRAG_END:
+        return {
+          ...state,
+          dragedCard: null,
+          dragedList: null,
+          dragElementLimits: null,
+        };
     default: {
       return state;
     }

@@ -1,0 +1,26 @@
+.modalCreateCard {
+  margin: 20px 5px;
+}
+
+.buttonAddCard,
+.spanNoCreate {
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.buttonAddCard {
+  background-color: lightgray;
+  color: #2b4074;
+  border: 2px solid lightgray;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: red;
+    border: 2px solid red;
+    color: white;
+  }
+}
+

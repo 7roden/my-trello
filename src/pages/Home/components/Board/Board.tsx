@@ -14,7 +14,7 @@ const Board: FC<IBoardHome> = ({ id, title }) => {
 
   const clickMenu = (e: React.MouseEvent) => {
     console.log('sdfsdfdf');
-    e.stopPropagation();
+    e.preventDefault();
   };
 
   const Menu = (): JSX.Element => (
@@ -26,7 +26,7 @@ const Board: FC<IBoardHome> = ({ id, title }) => {
           </div>
         }
         position="right top"
-        on="hover"
+        on="click"
         closeOnDocumentClick
         closeOnEscape
         mouseLeaveDelay={300}

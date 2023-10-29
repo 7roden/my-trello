@@ -1,6 +1,5 @@
 import { IBoardHome } from 'IBoardHome';
 import { IBoard } from 'IBoard ';
-import Card from 'src/pages/Board/components/Card/Card';
 import { ICard } from 'ICard';
 import { type } from 'os';
 import { IList } from 'IList';
@@ -20,7 +19,7 @@ export enum BoardHomeActionTypes {
   CLEAR_ERROR = 'CLEAR_ERROR',
 }
 
-export const TIME_OUT_PAUSE = 2000;
+export const TIME_OUT_PAUSE = 0;
 
 interface FetchBoards {
   type: BoardHomeActionTypes.FETCH_BOARDS;
@@ -96,7 +95,7 @@ interface FetchChangeList {
 
 interface FetchCreateCard {
   type: BoardActionTypes.CREATE_CARD;
-  payload: IBoard;
+  // payload: IBoard;
 }
 
 interface FetchErrorAction {
@@ -119,7 +118,7 @@ interface FetchDeleteCard {
 
 interface FetchEditCards {
   type: BoardActionTypes.EDIT_CARDS;
-  payload: IBoard;
+  // payload: IBoard;
 }
 
 interface FetchBoardClearError {

@@ -1,0 +1,55 @@
+$textColor: #2b4074;
+
+.modal {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: rgba($color: #000000, $alpha: 0);
+  color: $textColor;
+  overflow: auto;
+
+  .modalEditCard {
+    width: 60%;
+    background-color: gray;
+    opacity: 1;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    z-index: 100;
+    border: 2px solid white;
+    border-radius: 4px;
+    padding: 1em;
+    cursor: default;
+  }
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 0.2em;
+}
+
+.gridItem1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.buttonLink {
+  position: relative;
+  width: 10em;
+  height: 1em;
+  padding-left:0.2em;
+  background-color: white;
+  margin: 5px;
+  border: 2px solid white;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: lightgray;
+    border: 2px solid lightgrey;
+    width: 11em;
+    height: 1.2em;
+  }
+}
+

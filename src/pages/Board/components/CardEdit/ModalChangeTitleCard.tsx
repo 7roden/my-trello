@@ -4,12 +4,12 @@ import { isValidTitle } from 'src/common/Modules/Modules';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch } from 'src/hook';
 
-type typePropsModalChange = {
+type typePropsModalChangeTitleCard = {
   listID?: string;
   titleList: string;
 };
 
-const ModalChange: FC<typePropsModalChange> = ({ listID, titleList }) => {
+const ModalChangeTitleCard: FC<typePropsModalChangeTitleCard> = ({ listID, titleList }) => {
   const boardID = useParams<string>().boardID;
   const { changeListTitle } = useAppDispatch();
 
@@ -17,6 +17,7 @@ const ModalChange: FC<typePropsModalChange> = ({ listID, titleList }) => {
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
   const changeTitle = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('changeTitle >>', e.target);
     if (isValidTitle(title) && title !== titleList) {
       if (title !== titleList) {
         const newList: ListAdd = {
@@ -60,4 +61,4 @@ const ModalChange: FC<typePropsModalChange> = ({ listID, titleList }) => {
   );
 };
 
-export default ModalChange;
+export default ModalChangeTitleCard;

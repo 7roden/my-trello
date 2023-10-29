@@ -1,0 +1,60 @@
+.body {
+  overflow: hidden;
+}
+
+.myBoard {
+  position: relative;
+}
+
+.lists {
+  white-space: nowrap;
+  // overflow: auto;
+  // display: inline-block;
+}
+
+.listContainer {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  margin: 10px;
+  white-space: normal;
+
+  & > * {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+form > * {
+  padding: 0 3px;
+  margin: 0 5px 0 0;
+  outline: none;
+  resize: none;
+}
+
+
+.closeModal {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: -10px;
+  right: -10px;
+  background-color: gray;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dragging {
+  opacity: 0.5;
+  transform: rotate(0.5turn);
+  display: none;
+}
+
+.list.dropZone {
+  background-color: red;
+  margin: 10px 0;
+
+  position: relative;
+  border-radius: 3px;
+  white-space: normal;
+}

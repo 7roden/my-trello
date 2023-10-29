@@ -5,10 +5,11 @@ import { IBoardHome } from 'IBoardHome';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch } from 'src/hook';
 
+
 const ModalChangeBoard: FC<{ board: IBoard }> = ({ board }) => {
   const [title, setTitle] = useState<string>('');
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
-  const boardID = useParams<string>().id;
+  const boardID = useParams<string>().boardID;
   const { changeBoard } = useAppDispatch();
   useEffect(() => {
     if (board) {
@@ -42,25 +43,11 @@ const ModalChangeBoard: FC<{ board: IBoard }> = ({ board }) => {
 
   }
 
-  // const FormToChange: FC<{title:string}> = ({title}): JSX.Element => {
-  //   return (
-  //     <div className="formToChange">
-  //       <form onSubmit={changeTitle} onBlur={changeTitle}>
-  //         <input
-  //           type="text"
-  //           value={title || ''}
-  //           onChange={(e) => setTitle(e.target.value)}
-  //         />
-  //       </form>
-  //     </div>
-  //   );
-  // }; not render if title change
-
   return (
-    <div>
+    <>
       {!isVisibleModal ? (
         <h1 className="boardTitle" onClick={handleTitle}>
-          {title} boardID:{boardID}
+          {title} boardID:{board.id || 'noooo'}
         </h1>
       ) : (
         <div className="formToChange">
@@ -74,7 +61,7 @@ const ModalChangeBoard: FC<{ board: IBoard }> = ({ board }) => {
           </form>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

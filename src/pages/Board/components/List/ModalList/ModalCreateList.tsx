@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom';
 import { ListAdd } from 'src/common/interfaces/ListAdd';
 import { isValidTitle } from 'src/common/Modules/Modules';
 import { useAppDispatch } from 'src/hook';
+import './modalCreateList.scss'
 
 const ModalCreateList = (props: any) => {
   const [title, setTitle] = useState<string>('Enter list name...');
-  const boardID = useParams<string>().id;
+  const boardID = useParams<string>().boardID;
   const { createList } = useAppDispatch();
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
 
@@ -35,18 +36,6 @@ const ModalCreateList = (props: any) => {
     setIsVisibleModal(true);
     setTitle('Enter list name...');
   };
-
-  // const FormCreateList: FC = (): JSX.Element => (
-  //   <div className="formCreateList">
-  //     <form onSubmit={handleList}>
-  //       <input value={title} onChange={(e) => setTitle(e.target.value)} />
-  //       <button type="submit">Create list</button>
-  //       <span className="spanNoCreate" onClick={noCreateList}>
-  //         &times;
-  //       </span>
-  //     </form>
-  //   </div>
-  // );
 
   return (
     <div className="modalCreateList">

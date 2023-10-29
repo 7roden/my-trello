@@ -1,0 +1,61 @@
+.listCards {
+  position: relative;
+  width: 250px;
+  // height: 250px;
+  background-color: lightgray;
+  text-align: left;
+  color: #2b4074;
+  margin: 10px;
+  border-radius: 4px;
+  white-space: normal;
+}
+
+.cards {
+  position: relative;
+  width: 95%;
+  max-height: 200px;
+  margin: 5px auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // css for scrollbar
+  &::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 5px;
+  }
+
+  .listTitle {
+    margin: 10px;
+  }
+}
+
+.cardContainer {
+  position: relative;
+  margin: 5px 0;
+  width: 100%;
+}
+
+.card {
+  position: relative;
+  max-width: 100%;
+  min-height: 30px;
+  background-color: white;
+  border-radius: 4px;
+  padding: 0 5px;
+}
+
+.dropZone {
+  background-color: red;
+  margin: 0 0 5px 0;
+}
+
+a {
+  text-decoration: none;
+}

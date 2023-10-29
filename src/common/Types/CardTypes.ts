@@ -7,11 +7,18 @@ export enum CardActionTypes {
   SHOW_MODAL_CARD = 'SHOW_MODAL_CARD',
   HIDEN_MODAL_CARD = 'HIDEN_MODAL_CARD',
   CARD_DRAG_START = 'CARD_DRAG_START',
+  CARD_DRAG_END = 'CARD_DRAG_END',
 }
+
+export enum ModalCardActionsTypes {
+  CARD_MOVEMENT = 'CARD_MOVEMENT',
+  CARD_COPYING = 'CARD_COPYING',
+}
+
 
 interface FetchShowModalCard {
   type: CardActionTypes.SHOW_MODAL_CARD;
-  payload: ICard;
+  payload: {card: ICard; list: IList};
 }
 
 interface FetchHidenModalCard {
@@ -23,10 +30,16 @@ interface FetchCardDragStart {
   payload: { card: ICard; list: IList; dragElementLimits: elementLimitsType };
 }
 
+interface FetchCardDragEnd {
+  type: CardActionTypes.CARD_DRAG_END
+}
+
+
 export type CardAction =
   | FetchShowModalCard
   | FetchHidenModalCard
-  | FetchCardDragStart;
+  | FetchCardDragStart
+  | FetchCardDragEnd;
 
 export type elementLimitsType = {
   top: number;

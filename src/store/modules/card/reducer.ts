@@ -3,12 +3,14 @@ import { IList } from 'IList';
 import { CardAction, CardActionTypes } from 'src/common/Types/CardTypes';
 
 interface CardState {
-  card: ICard;
+  card: ICard | null;
+  list: IList | null;
   isVisibleEditCard: boolean;
 }
 
 const initialState: CardState = {
-  card: { title: '', id: '', position: 0 },
+  card: null,
+  list: null,
   isVisibleEditCard: false,
 };
 
@@ -20,7 +22,8 @@ export default function reducer(
     case CardActionTypes.SHOW_MODAL_CARD:
       return {
         ...state,
-        card: action.payload,
+        card: action.payload.card,
+        list: action.payload.list,
         isVisibleEditCard: true,
       };
     case CardActionTypes.HIDEN_MODAL_CARD:

@@ -1,0 +1,38 @@
+$buttonColor: lightgray;
+$buttonHoverColor: red;
+
+.modalCreateList {
+  position: relative;
+  display: inline-block;
+  width: 250px;
+  min-height: 50px;
+  background-color: lightgray;
+  opacity: 1;
+  text-align: left;
+  color: #2b4074;
+  margin: 10px 5px;
+  border-radius: 3px;
+  white-space: normal;
+}
+
+.buttonAddList {
+  background-color: $buttonColor;
+  color: #2b4074;
+  border: 2px solid $buttonColor;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: $buttonHoverColor;
+    border: 2px solid $buttonHoverColor;
+    color: white;
+  }
+}
+
+.buttonAddList,
+.spanNoCreate {
+  cursor: pointer;
+  border-radius: 2px;
+}

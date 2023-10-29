@@ -4,6 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import Popup from 'reactjs-popup';
 import { EditListsType } from 'src/common/Types/ListTypes';
 import { useAppDispatch, useAppSelector } from 'src/hook';
+import './listMenu.scss'
 
 // list menu
 

@@ -61,7 +61,7 @@ export default function reducer(
     case BoardActionTypes.CREATE_CARD:
       return {
         ...state,
-        board: action.payload,
+        //board: action.payload,
         loading: false,
         error: '',
       };
@@ -97,7 +97,7 @@ export default function reducer(
     case BoardActionTypes.EDIT_CARDS:
       return {
         ...state,
-        board: action.payload,
+        //board: action.payload,
       };
     default: {
       return state;
