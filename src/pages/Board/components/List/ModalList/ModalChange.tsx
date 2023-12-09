@@ -1,5 +1,5 @@
 import { ListAdd } from 'src/common/interfaces/ListAdd';
-import { useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 import { isValidTitle } from 'src/common/Modules/Modules';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch } from 'src/hook';
@@ -15,6 +15,11 @@ const ModalChange: FC<typePropsModalChange> = ({ listID, titleList }) => {
 
   const [title, setTitle] = useState<string>(titleList || '');
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    setTitle(titleList);
+  },[titleList]);
+
   const changeTitle = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isValidTitle(title) && title !== titleList) {

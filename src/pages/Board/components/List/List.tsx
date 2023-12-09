@@ -30,7 +30,7 @@ const List: FC<typePropsList> = ({
   listDragEnterHandler,
 }) => {
   const { title, cards, id } = list;
-  const { cardDragStart, cardDragEnd, editCards, showModalCard } =
+  const { cardDragStart, cardDragEnd, editCards, showModalCard, getBoard } =
     useAppDispatch();
   const { isVisibleEditCard } = useAppSelector((state) => state.card);
   const elementBody: HTMLElement | null = document.querySelector('body');
@@ -41,7 +41,7 @@ const List: FC<typePropsList> = ({
     cards.map(() => false).concat(false)
   );
 
-  const { dragedCard, dragedList, dragElementLimits } = useAppSelector(
+  let { dragedCard, dragedList, dragElementLimits } = useAppSelector(
     (state) => state.slotDnD
   );
 
@@ -51,7 +51,7 @@ const List: FC<typePropsList> = ({
 
   useEffect(() => {
     setIsVisibleDropZone(cards.map(() => false).concat(false));
-  }, [cards]);
+  }, [dragedList]);
 
   // visible card menu
   const hover = (positionCard: number): void => {
@@ -171,7 +171,7 @@ const List: FC<typePropsList> = ({
     setIsVisibleDropZone(isVisibleDropZone.map((v) => false));
   };
 
-  const dropHandler = (e: DragEvent<HTMLElement>): void => {
+  const dropHandler = async (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
     if (!dragedCard || !dragedList) return;
     e.currentTarget.classList.remove('drop');
@@ -179,12 +179,16 @@ const List: FC<typePropsList> = ({
     const currentCard: ICard = cards[isVisibleDropZone.indexOf(true)];
     if (currentCard === dragedCard) return;
     const dropIndex = dragedList.cards.indexOf(dragedCard);
-    dragedList.cards.splice(dropIndex, 1);
+    let newCards: ICard[] = [...dragedList.cards];
+    newCards.splice(dropIndex, 1);
+    dragedList = { ...dragedList, cards: newCards };
     if (currentCard) {
       const positionDrop = list.cards.indexOf(currentCard);
-      list.cards.splice(positionDrop, 0, dragedCard);
+      newCards = [...list.cards];
+      newCards.splice(positionDrop, 0, dragedCard);
+      list = { ...list, cards: newCards };
     } else {
-      list.cards.push(dragedCard);
+      list = { ...list, cards: [...list.cards, dragedCard] };
     }
     let editCardLists: EditCardsType = list.cards.map(
       (card: ICard, index: number) => {
@@ -201,12 +205,13 @@ const List: FC<typePropsList> = ({
           return {
             id: card.id,
             position: index + 1,
-            list_id: dragedList.id,
+            list_id: dragedList?.id,
           };
         })
       );
     }
-    editCards(boardID, editCardLists);
+    await editCards(boardID, editCardLists);
+    await getBoard(boardID || '')
     setIsVisibleDropZone(cards.map(() => false).concat(false));
   };
 
@@ -241,61 +246,59 @@ const List: FC<typePropsList> = ({
     >
       <ModalChange listID={id} titleList={title} />
       <ListMenu boardID={boardID} listID={list.id} />
-      {cards.length ? (
-        <div
-          className="cards"
-          onDragLeave={dragLeaveCardsHandler}
-          onDrop={dropHandler}
-          onDragEnter={dragEnterCardsHandler}
-        >
-          {cards
-            .sort((a: ICard, b: ICard) => a.position - b.position)
-            .map((card: ICard, index: number) => {
-              return (
-                <div key={card.id} className="cardContainer">
-                  {isVisibleDropZone[index] && (
-                    <Slot
-                      className={'card dropZone'}
-                      style={{
-                        height: `${dragElementLimits?.height}px`,
-                        width: `${dragElementLimits?.width}px`,
-                      }}
-                    ></Slot>
-                  )}
-                  <Link to={`/board/${boardID}/card/${card.id}`}>
-                    <div
-                      className="card"
-                      id={`card${card.id}`}
-                      onClick={() => windowEditCard(card)}
-                      onMouseEnter={() => hover(index)}
-                      onMouseLeave={noHover}
-                      onDragStart={(e) => dragStartHandler(e, card)}
-                      onDragEnter={(e) => onDragEnterHandler(e, card)}
-                      onDragEnd={onDragEndHandler}
-                      onDragOver={(e) => dragOverHandler(e, card)}
-                      draggable={true}
-                    >
-                      {card.title}
-                      {isVisibleCardMenu[index] && (
-                        <CardListMenu list_id={list.id} card_id={card.id} />
-                      )}
-                    </div>
-                  </Link>
-                </div>
-              );
-            })}
-          {isVisibleDropZone[cards.length] && (
-            <Slot
-              className={'card dropZone'}
-              style={{
-                height: `${dragElementLimits?.height}px`,
-                width: `${dragElementLimits?.width}px`,
-              }}
-            ></Slot>
-          )}
-        </div>
-      ) : null}
-      <ModalCreateCard listID={list.id} position={list.cards.length + 1} />
+      <div
+        className="cards"
+        onDragLeave={dragLeaveCardsHandler}
+        onDrop={dropHandler}
+        onDragEnter={dragEnterCardsHandler}
+      >
+        {cards
+          .sort((a: ICard, b: ICard) => a.position - b.position)
+          .map((card: ICard, index: number) => {
+            return (
+              <div key={card.id} className="cardContainer">
+                {isVisibleDropZone[index] && (
+                  <Slot
+                    className={'card dropZone'}
+                    style={{
+                      height: `${dragElementLimits?.height}px`,
+                      width: `${dragElementLimits?.width}px`,
+                    }}
+                  ></Slot>
+                )}
+                <Link to={`/board/${boardID}/card/${card.id}`}>
+                  <div
+                    className="card"
+                    id={`card${card.id}`}
+                    onClick={() => windowEditCard(card)}
+                    onMouseEnter={() => hover(index)}
+                    onMouseLeave={noHover}
+                    onDragStart={(e) => dragStartHandler(e, card)}
+                    onDragEnter={(e) => onDragEnterHandler(e, card)}
+                    onDragEnd={onDragEndHandler}
+                    onDragOver={(e) => dragOverHandler(e, card)}
+                    draggable={true}
+                  >
+                    {card.title}
+                    {isVisibleCardMenu[index] && (
+                      <CardListMenu list_id={list.id} card_id={card.id} />
+                    )}
+                  </div>
+                </Link>
+              </div>
+            );
+          })}
+        {isVisibleDropZone[cards.length] && (
+          <Slot
+            className={'card dropZone'}
+            style={{
+              height: `${dragElementLimits?.height}px`,
+              width: `${dragElementLimits?.width}px`,
+            }}
+          ></Slot>
+        )}
+        <ModalCreateCard listID={list.id} position={list.cards.length + 1} />
+      </div>
     </div>
   );
 };

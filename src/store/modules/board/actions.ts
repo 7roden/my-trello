@@ -19,7 +19,6 @@ type typeBoardDispatch = {
   payload?: IBoard;
 };
 
-
 export const getBoard =
   (id: string) => async (dispatch: Dispatch<BoardAction>) => {
     try {
@@ -119,13 +118,17 @@ export const createCard =
     const { title, list_id, position, description, custom } = card;
     try {
       dispatch({ type: BoardActionTypes.FETCH_BOARD });
-      await api.post(`/board/${boardID}/card`, {
-        title,
-        list_id,
-        position,
-        description,
-        custom,
-      });
+      await api
+        .post(`/board/${boardID}/card`, {
+          title,
+          list_id,
+          position,
+          description,
+          custom,
+        })
+        .then((data) => {
+          console.log('data in create card', data);
+        });
       // const data: IBoard = await api.get(`/board/${boardID}`);
       // data.id = boardID || '';
       await setTimeout(
@@ -179,7 +182,7 @@ export const deleteCard =
   (boardID: string | undefined, cardID: string | undefined) =>
   async (dispatch: Dispatch<BoardAction>) => {
     try {
-      await api.delete(`/board/${boardID}/card/${cardID}`);
+      await api.delete(`/board/${boardID}/card/${cardID}`).then((data) => console.log('data in deleteCard ', data));
       dispatch({ type: BoardActionTypes.DELETE_CARD });
     } catch (e) {
       const error = e as AxiosError;
@@ -194,11 +197,11 @@ export const editCards =
   (boardID: string | undefined, cards: EditCardsType) =>
   async (dispatch: Dispatch<BoardAction>) => {
     try {
-      //console.log('cards >> ',cards);
+      console.log('editCards cards >> ',cards);
       await api.put(`/board/${boardID}/card`, cards);
       // const data: IBoard = await api.get(`/board/${boardID}`);
       // data.id = boardID || '';
-      await dispatch({ type: BoardActionTypes.EDIT_CARDS});
+      await dispatch({ type: BoardActionTypes.EDIT_CARDS });
     } catch (e) {
       const error = e as AxiosError;
       dispatch({

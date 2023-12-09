@@ -18,7 +18,7 @@ const ModalCreateCard: FC<typePropsCreateCard> = ({ listID, position }) => {
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
   const [isOnBlur, setIsOnBlur] = useState(true);
 
-  const handleCard = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCard = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isValidTitle(title) && isOnBlur) {
       const newCard: CardAdd = {
@@ -28,8 +28,8 @@ const ModalCreateCard: FC<typePropsCreateCard> = ({ listID, position }) => {
         description: title,
         custom: {},
       };
-      createCard(newCard, boardID);
-      getBoard(boardID || '');
+      await createCard(newCard, boardID);
+      await getBoard(boardID || '');
       setTitle('');
       setIsVisibleModal(false);
     }
@@ -49,7 +49,6 @@ const ModalCreateCard: FC<typePropsCreateCard> = ({ listID, position }) => {
     setTitle('');
     setIsOnBlur(true);
   };
-
 
   return (
     <div className="modalCreateCard">

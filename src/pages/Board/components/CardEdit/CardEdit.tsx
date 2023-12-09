@@ -145,7 +145,7 @@ const CardEdit = () => {
                 <>
                   {' '}
                   <h3 className="cardTitle" onClick={handleTitle}>
-                    {title}
+                    {title} cardID:{cardID}
                   </h3>
                   <div className="titleList">
                     <p>in list {list?.title}</p>

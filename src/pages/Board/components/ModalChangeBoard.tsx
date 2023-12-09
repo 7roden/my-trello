@@ -11,6 +11,7 @@ const ModalChangeBoard: FC<{ board: IBoard }> = ({ board }) => {
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
   const boardID = useParams<string>().boardID;
   const { changeBoard } = useAppDispatch();
+
   useEffect(() => {
     if (board) {
       setTitle(board.title);

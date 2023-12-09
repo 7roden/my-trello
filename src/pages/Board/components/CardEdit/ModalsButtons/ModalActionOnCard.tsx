@@ -2,7 +2,6 @@ import { IBoard } from 'IBoard ';
 import { IBoardHome } from 'IBoardHome';
 import { ICard } from 'ICard';
 import { IList } from 'IList';
-import { type } from 'os';
 import React, { FC, useEffect, useState } from 'react';
 import { SlClose } from 'react-icons/sl';
 import { useParams } from 'react-router-dom';
@@ -34,14 +33,18 @@ const ModalActionOnCard: FC<PropsModalActionOnCard> = ({
   const currentBoard = useAppSelector<IBoard>((state) => state.board.board);
   const { card, list } = useAppSelector((state) => state.card);
 
-  const [selectedBoard, setSelectedBoard] = useState(currentBoard);
-  const [title, setTitle] = useState(card?.title || 'Назва нової картки');
-  const [selectedList, setSelectedList] = useState(list);
-  const [selectedCardPosition, setSelectedCardPosition] = useState(
-    card?.position
-  );
+  let currentList: IList = { ...list } as IList;
+  let currentCard: ICard = { ...card } as ICard;
 
-  const { createCard, showModalCard, editCards, deleteCard } = useAppDispatch();
+  const [selectedBoard, setSelectedBoard] = useState({ ...currentBoard });
+  const [title, setTitle] = useState(card?.title || 'Назва нової картки');
+  const [selectedList, setSelectedList] = useState({ ...list });
+  const currentCardPosition: number = card ? card.position : 1;
+  const [selectedCardPosition, setSelectedCardPosition] =
+    useState(currentCardPosition);
+
+  const { createCard, showModalCard, editCards, deleteCard, getBoard } =
+    useAppDispatch();
 
   const { boardID, cardID } = useParams();
 
@@ -57,23 +60,30 @@ const ModalActionOnCard: FC<PropsModalActionOnCard> = ({
   };
 
   useEffect(() => {
-    if (currentBoard.id === selectedBoard.id) return;
-    const firstList: IList = selectedBoard.lists[0];
-    setSelectedList(firstList);
-    if (firstList) {
-      setSelectedCardPosition(firstList.cards.length + 1);
-    }
-  }, [selectedBoard]);
+    const { id, title, cards, position } = selectedList;
+    console.log('useEffect currentCard >>', currentCard.position)
+    showModalCard(currentCard, {
+      id: id || '',
+      title: title || '',
+      cards: cards.map((c: ICard, index: number) => {
+        return { ...c, position: index + 1 };
+      }),
+      position: position || 0,
+    });
+  }, [currentCard.position]);
 
   const handlerOnChangeBoard = (board_id: string) => {
     if (board_id === currentBoard.id) {
-      setSelectedBoard(currentBoard);
-      if (list) setSelectedList(list);
-      if (card) setSelectedCardPosition(card.position);
+      setSelectedBoard({ ...currentBoard });
+      setSelectedList({ ...list });
+      setSelectedCardPosition(currentCardPosition);
     } else {
       getDataBoard(board_id).then(
         (b) => {
           setSelectedBoard(b);
+          const firstList: IList = { ...b.lists[0] };
+          setSelectedList(firstList);
+          setSelectedCardPosition(firstList.cards.length + 1);
         },
         (e) => {
           alert(e); // оповіщення у разі помилки при отриманні данних з бекенду
@@ -87,12 +97,12 @@ const ModalActionOnCard: FC<PropsModalActionOnCard> = ({
       const setList = selectedBoard.lists.filter(
         (l: IList) => l.id + '' === listID
       )[0];
-      setSelectedList(setList);
+      setSelectedList({ ...setList });
       const position = setList.cards.length;
       setSelectedCardPosition(position + 1);
     }
     if (list && listID === list.id) {
-      if (card) setSelectedCardPosition(card.position);
+      setSelectedCardPosition(currentCardPosition);
     }
   };
 
@@ -100,14 +110,10 @@ const ModalActionOnCard: FC<PropsModalActionOnCard> = ({
     setSelectedCardPosition(position);
   };
 
-  const createEditCardList = (
-    cards: ICard[],
-    listID: string
-  ): EditCardsType => {
-    return cards.map((c: ICard, index: number) => {
+  const createEditCardList = (cards: ICard[], listID: string): EditCardsType =>
+    cards.map((c: ICard, index: number) => {
       return { id: c.id, position: index + 1, list_id: listID };
     });
-  };
 
   const createNewCard = (
     title: string,
@@ -123,107 +129,86 @@ const ModalActionOnCard: FC<PropsModalActionOnCard> = ({
     };
   };
 
-  const cardMovement = () => {
+  const cardMovement = async () => {
     closeModalAction(false);
     let editCardLists: EditCardsType;
     if (
-      selectedList?.id === list?.id &&
-      selectedCardPosition === card?.position
+      selectedList?.id === currentList?.id &&
+      selectedCardPosition === currentCardPosition
     ) {
       return;
     }
-    const drawnCard: ICard =
-      selectedCardPosition && selectedCardPosition <= selectedList?.cards.length
-        ? selectedList?.cards[selectedCardPosition - 1]
-        : null;
-    const cutCardPosition = list?.cards.indexOf(card);
-    list?.cards.splice(cutCardPosition, 1);
+    const drawnCard: ICard = selectedList?.cards[selectedCardPosition - 1];
+    currentList.cards.splice(currentCardPosition - 1, 1);
 
-    const drawnCardPosition = (cards: ICard[]): number => {
-      return drawnCard ? cards.indexOf(drawnCard) : cards.length;
-    };
-
-    if (list?.id === selectedList?.id) {
-      if (card) list?.cards.splice(drawnCardPosition(list.cards), 0, card);
-      editCards(boardID, createEditCardList(list?.cards, list?.id || ''));
+    if (currentList.id === selectedList.id) {
+      currentCard = { ...currentCard, position: selectedCardPosition };
+      currentList.cards.splice(selectedCardPosition - 1, 0, currentCard);
+      await editCards(
+        boardID,
+        createEditCardList(currentList.cards, currentList.id || '')
+      );
+      // await showModalCard(currentCard, currentList)
+      await getBoard(boardID || '');
       return;
     }
 
-    // new solution
-    // let newCards: ICard[] = selectedList?.cards.map((c: ICard) => {
-    //   if (selectedCardPosition && c.position >= selectedCardPosition)
-    //     c.position++;
-    // });
-    // if (card) {
-    //   const newCard: ICard = { ...card, position: selectedCardPosition || 0 };
-    //   newCards = [...newCards, newCard];
-    //   newCards = newCards.sort((a: ICard, b: ICard) => {
-    //     return a.position - b.position;
-    //   });
-    //   setSelectedList({ ...selectedList?.cards, cards: newCards });
-    // }
+    const cards = [...selectedList.cards];
+    cards.splice(selectedCardPosition - 1, 0, currentCard);
+    setSelectedList({
+      ...selectedList,
+      cards: [...cards],
+    });
 
-    // end new solution
-
-    // old solution
-    if (card) {
-      selectedList?.cards.splice(
-        drawnCardPosition(selectedList.cards),
-        0,
-        card
-      );
-    }
-    // end old solution
     if (currentBoard.id === selectedBoard.id) {
-      // old
-      editCardLists = createEditCardList(list?.cards, list?.id || '').concat(
-        createEditCardList(selectedList?.cards, selectedList?.id || '')
-      );
-      //
+      editCardLists = createEditCardList(
+        currentList.cards,
+        currentList.id || ''
+      ).concat(createEditCardList(cards, selectedList.id || ''));
 
-      // new
-      // editCardLists = createEditCardList(list?.cards, list?.id || '').concat(
-      //   createEditCardList(selectedList?.cards, selectedList?.id || '')
-      // );
-      //
+      await editCards(boardID, editCardLists);
 
-      editCards(boardID, editCardLists);
-      if (card && selectedList) {
-        showModalCard(card, selectedList);
-      }
+      // if (selectedList) {
+      //   const { id, title, cards, position } = selectedList;
+      //   await showModalCard(currentCard, {
+      //     id: id || '',
+      //     title: title || '',
+      //     cards: cards,
+      //     position: position || 0,
+      //   });
+      // }
     } else {
-      createCard(
+      await createCard(
         createNewCard(
-          card?.title || '',
-          selectedList?.id || '',
-          selectedCardPosition || 0
+          currentCard.title || '',
+          selectedList.id || '',
+          selectedCardPosition
         ),
         selectedBoard?.id
       );
-      editCardLists = selectedList?.cards
-        .filter((c: ICard) => c.id !== card?.id)
+      editCardLists = cards
+        .filter((c: ICard) => c.id !== currentCard.id)
         .map((c: ICard, index: number) => {
           let position = index++;
-          if (selectedCardPosition && position >= selectedCardPosition)
-            position = position++;
+          if (position >= selectedCardPosition) position = position++;
           return {
             id: c.id,
-            position,
+            position: index + (c.position >= selectedCardPosition ? 2 : 1),
             list_id: selectedList?.id || '',
           };
         });
-      editCards(selectedBoard.id, editCardLists);
-      editCardLists = list?.cards.map((c: ICard, index: number) => {
+      await editCards(selectedBoard.id, editCardLists);
+      editCardLists = currentList?.cards.map((c: ICard, index: number) => {
         return {
           id: c.id,
           position: index + 1,
           list_id: list?.id || '',
         };
       });
-      console.log('editcardsList boardID>>', editCardLists);
-      deleteCard(boardID, cardID);
+      await deleteCard(boardID, cardID);
       closeEditCard();
     }
+    await getBoard(boardID || '');
   };
 
   const closeModal = (e: React.MouseEvent) => {
@@ -235,7 +220,7 @@ const ModalActionOnCard: FC<PropsModalActionOnCard> = ({
     const newCard: CardAdd = {
       title: title,
       list_id: selectedList?.id,
-      position: selectedCardPosition || 1,
+      position: selectedCardPosition ? selectedCardPosition - 1 : 1,
       description: card?.title || '',
       custom: {},
     };
@@ -360,11 +345,15 @@ const ModalActionOnCard: FC<PropsModalActionOnCard> = ({
                         </option>
                       );
                     })}
-                    <option
-                      value={(selectedList ? selectedList.cards.length : 0) + 1}
-                    >
-                      {(selectedList ? selectedList.cards.length : 0) + 1}
-                    </option>
+                    {selectedList.id !== currentList.id && (
+                      <option
+                        value={
+                          (selectedList ? selectedList.cards.length : 0) + 1
+                        }
+                      >
+                        {(selectedList ? selectedList.cards.length : 0) + 1}
+                      </option>
+                    )}
                   </select>
                 ) : (
                   <select>
